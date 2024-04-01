@@ -27,11 +27,43 @@ print("Welcome to the UW Calculator Playground")
 //: For this latter set of operations, it is safe to assume that `["count"]` (with no additional arguments) is 0, `["avg"]` is also 0, and `["fact"]` is 0. `["1", "fact"]` should return 1, and `["0", "fact"]` should also return 1. (Yes, 0-factorial is 1. True story.)
 //: 
 func calculate(_ args: [String]) -> Int {
-    return -1
+    if args.count == 3, 
+        let num1 = Int(args[0]), let num2 = Int(args[2]) {
+        switch args[1] {
+        case "+":
+            return num1 + num2
+        case "-":
+            return num1 - num2
+        case "*":
+            return num1 * num2
+        case "/":
+            return num1 / num2
+        case "%":
+            return num1 % num2
+        default:
+            break
+        }
+    } else if args.count >= 2 {
+        switch args.last {
+        case "count":
+            return args.count - 1
+        case "avg":
+            let nums = args[0..<args.count-1].compactMap { Int($0) }
+            return nums.reduce(0, +) / nums.count
+        case "fact":
+            guard let num = Int(args[0]), args.count == 2 else { return 0 }
+            return (1...max(num, 1)).reduce(1, *)
+        default:
+            break
+        }
+    }
+    return 0
 }
 
 func calculate(_ arg: String) -> Int {
-    return -1
+    // convert substring to string in a array
+    let args = arg.split(separator: " ").map(String.init)
+    return calculate(args)
 }
 
 //: Below this are the test expressions/calls to verify if your code is correct.
@@ -85,7 +117,7 @@ calculate("5 fact") == 120
 //: Implement `calculate([String])` and `calculate(String)` to handle negative numbers. You need only make the tests below pass. (You do not need to worry about "fact"/factorial with negative numbers, for example.)
 //:
 //: This is worth 1 pt
-/*
+
 calculate(["2", "+", "-2"]) == 0
 calculate(["2", "-", "-2"]) == 4
 calculate(["2", "*", "-2"]) == -4
@@ -100,7 +132,7 @@ calculate("2 - -2") == 4
 calculate("-2 / 2") == -1
 
 calculate("1 -2 3 -4 5 count") == 5
-*/
+
  
 //: Implement `calculate([String])` and `calculate(String)` to use 
 //: and return floating-point values. You need only make the tests 
@@ -112,12 +144,37 @@ calculate("1 -2 3 -4 5 count") == 5
 //: Integer-based versions above.
 //: 
 //: This is worth 1 pt
-/*
+
 func calculate(_ args: [String]) -> Double {
+    if args.count == 3, 
+        let num1 = Double(args[0]), let num2 = Double(args[2]) {
+        switch args[1] {
+        case "+":
+            return num1 + num2
+        case "-":
+            return num1 - num2
+        case "*":
+            return num1 * num2
+        case "/":
+            return num2 == 0 ? Double.nan : num1 / num2
+        case "%":
+            return num1.truncatingRemainder(dividingBy: num2)
+        default:
+            return -1.0
+        }
+    } else if args.count >= 2 {
+        switch args.last {
+        case "count":
+            return Double(args.count - 1)
+        default:
+            return -1.0
+        }
+    }
     return -1.0
 }
 func calculate(_ arg: String) -> Double {
-    return -1.0
+    let args = arg.split(separator: " ").map(String.init)
+    return calculate(args)
 }
 
 calculate(["2.0", "+", "2.0"]) == 4.0
@@ -127,4 +184,4 @@ calculate(["2.5", "*", "2.5"]) == 6.25
 calculate(["2.0", "/", "2.0"]) == 1.0
 calculate(["2.0", "%", "2.0"]) == 0.0
 calculate("1.0 2.0 3.0 4.0 5.0 count") == 5.0
-*/
+
